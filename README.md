@@ -1,3 +1,3 @@
-# ProjektReact
+# Projekt
 Artur Krywult 
 Jakub Bednarz

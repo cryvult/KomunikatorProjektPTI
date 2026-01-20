@@ -16,7 +16,7 @@ app.use('/uploads', express.static(path.join(__dirname, 'uploads')));
 const server = http.createServer(app);
 const io = new Server(server, {
     cors: {
-        origin: "http://localhost:5173", // URL klienta Vite
+        origin: "http://localhost:5173",
         methods: ["GET", "POST"]
     }
 });
@@ -25,7 +25,8 @@ const dbConfig = {
     host: process.env.DB_HOST || 'localhost',
     user: process.env.DB_USER || 'root',
     password: process.env.DB_PASSWORD || '',
-    database: process.env.DB_NAME || 'komunikator_db'
+    database: process.env.DB_NAME || 'komunikator_db',
+    multipleStatements: true
 };
 
 let dbConnection;
@@ -34,6 +35,9 @@ async function connectToDatabase() {
     try {
         dbConnection = await mysql.createPool(dbConfig);
         console.log("Połączono z bazą danych MySQL");
+
+        // Init DB from file if needed (Code simplified, assuming manual init or pre-inited)
+        // W środowisku dev można tu dodać auto-init, ale zostawmy to użytkownikowi/adminowi
     } catch (err) {
         console.error("Błąd połączenia z bazą danych:", err);
     }
@@ -46,7 +50,9 @@ const storage = multer.diskStorage({
         cb(null, 'uploads/');
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + '-' + file.originalname);
+        // Enforce ASCII names + timestamp to avoid encoding issues
+        const safeName = file.originalname.replace(/[^a-zA-Z0-9.]/g, '_');
+        cb(null, Date.now() + '-' + safeName);
     }
 });
 const upload = multer({ storage: storage });
@@ -100,43 +106,55 @@ app.post('/login', async (req, res) => {
     }
 });
 
+// Pobieranie historii wiadomości dla DOWOLNEGO pokoju
 app.get('/messages/:room', async (req, res) => {
     const { room } = req.params;
     try {
         if (!dbConnection) return res.json([]);
 
-        if (room === 'public') {
-            const [messages] = await dbConnection.execute(`
-                SELECT m.*, u.username as sender_name 
-                FROM messages m 
-                JOIN users u ON m.sender_id = u.id 
-                WHERE m.recipient_id IS NULL 
-                ORDER BY m.created_at ASC
-            `);
-            res.json(messages);
-        } else {
-            res.json([]);
-        }
+        const [messages] = await dbConnection.execute(`
+            SELECT m.*, u.username as sender_name 
+            FROM messages m 
+            JOIN users u ON m.sender_id = u.id 
+            WHERE m.room_name = ? 
+            ORDER BY m.created_at ASC
+        `, [room]);
+
+        res.json(messages);
     } catch (error) {
         console.error(error);
         res.status(500).json({ error: 'Błąd pobierania wiadomości' });
     }
 });
 
+// Endpoint uploadu plików
+app.post('/upload', upload.single('file'), (req, res) => {
+    if (!req.file) return res.status(400).json({ error: 'Brak pliku' });
+
+    const fileUrl = `${req.protocol}://${req.get('host')}/uploads/${req.file.filename}`;
+    res.json({
+        filePath: fileUrl,
+        fileName: req.file.originalname,
+        fileType: req.file.mimetype
+    });
+});
+
+
 io.on('connection', (socket) => {
     console.log(`Użytkownik połączony: ${socket.id}`);
 
     socket.on('join_room', (room) => {
         socket.join(room);
+        console.log(`Użytkownik ${socket.id} dołączył do pokoju: ${room}`);
     });
 
     socket.on('send_message', async (data) => {
-        const { sender_id, content, room } = data;
+        const { sender_id, content, room, file_path, file_type } = data;
         try {
-            if (dbConnection && room === 'public') {
+            if (dbConnection) {
                 const [result] = await dbConnection.execute(
-                    'INSERT INTO messages (sender_id, recipient_id, content) VALUES (?, NULL, ?)',
-                    [sender_id, content]
+                    'INSERT INTO messages (sender_id, room_name, content, file_path, file_type) VALUES (?, ?, ?, ?, ?)',
+                    [sender_id, room, content, file_path || null, file_type || null]
                 );
                 data.id = result.insertId;
             }

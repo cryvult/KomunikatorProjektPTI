@@ -105,11 +105,35 @@ export default function Chat({ user, onLogout }) {
         }
     };
 
-    const joinCustomRoom = () => {
-        if (customRoomInput.trim()) {
-            setCurrentRoom(customRoomInput.trim());
-            setCustomRoomInput('');
+    const [savedRooms, setSavedRooms] = useState([]);
+
+    useEffect(() => {
+        const stored = localStorage.getItem('saved_rooms');
+        if (stored) {
+            setSavedRooms(JSON.parse(stored));
         }
+    }, []);
+
+    const joinCustomRoom = () => {
+        const roomName = customRoomInput.trim();
+        if (roomName) {
+            setCurrentRoom(roomName);
+            setCustomRoomInput('');
+
+            if (roomName !== 'public' && !savedRooms.includes(roomName)) {
+                const newRooms = [...savedRooms, roomName];
+                setSavedRooms(newRooms);
+                localStorage.setItem('saved_rooms', JSON.stringify(newRooms));
+            }
+        }
+    };
+
+    const removeRoom = (roomName, e) => {
+        e.stopPropagation();
+        const newRooms = savedRooms.filter(r => r !== roomName);
+        setSavedRooms(newRooms);
+        localStorage.setItem('saved_rooms', JSON.stringify(newRooms));
+        if (currentRoom === roomName) setCurrentRoom('public');
     };
 
     return (
@@ -121,14 +145,40 @@ export default function Chat({ user, onLogout }) {
 
                 <button
                     className="btn"
-                    style={{ marginBottom: '1rem', background: currentRoom === 'public' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.1)' }}
+                    style={{ marginBottom: '0.5rem', background: currentRoom === 'public' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.1)' }}
                     onClick={() => setCurrentRoom('public')}
                 >
                     # Publiczny
                 </button>
 
-                <div style={{ marginTop: 'auto' }}>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Dołącz do innego pokoju:</p>
+                <div style={{ flex: 1, overflowY: 'auto', marginBottom: '1rem' }}>
+                    {savedRooms.map(room => (
+                        <div key={room} style={{ display: 'flex', marginBottom: '0.5rem' }}>
+                            <button
+                                className="btn"
+                                style={{
+                                    flex: 1,
+                                    background: currentRoom === room ? 'var(--accent-hover)' : 'rgba(255,255,255,0.05)',
+                                    fontSize: '0.9rem',
+                                    padding: '0.5rem 1rem',
+                                    textAlign: 'left'
+                                }}
+                                onClick={() => setCurrentRoom(room)}
+                            >
+                                # {room}
+                            </button>
+                            <button
+                                onClick={(e) => removeRoom(room, e)}
+                                style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', marginLeft: '5px' }}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                    ))}
+                </div>
+
+                <div>
+                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Dołącz do nowego pokoju:</p>
                     <div style={{ display: 'flex', gap: '5px' }}>
                         <input
                             className="input-field"
@@ -137,7 +187,7 @@ export default function Chat({ user, onLogout }) {
                             value={customRoomInput}
                             onChange={(e) => setCustomRoomInput(e.target.value)}
                         />
-                        <button className="btn" style={{ padding: '0.5rem', borderRadius: '8px' }} onClick={joinCustomRoom}>Go</button>
+                        <button className="btn" style={{ padding: '0.5rem', borderRadius: '8px' }} onClick={joinCustomRoom}>+</button>
                     </div>
                 </div>
 

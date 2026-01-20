@@ -21,22 +21,52 @@ Struktura bazy danych znajduje się w pliku `server/database.sql`.
 
 ## Instrukcja Uruchomienia
 
-### 1. Baza Danych (MySQL)
-Uruchom plik `server/database.sql` w swojej bazie danych MySQL, aby utworzyć wymagane tabele.
-Upewnij się, że w pliku `server/.env` (lub w kodzie `server.js`) skonfigurowane są poprawne dane dostępowe do bazy.
+### Wymagania
+- Node.js (v16 lub nowszy)
+- MySQL (lub XAMPP z MySQL)
+- Git
 
-### 2. Serwer (Backend)
+### 1. Sklonuj Repozytorium
+```bash
+git clone https://github.com/cryvult/KomunikatorProjektPTI.git
+cd KomunikatorProjektPTI
+```
+
+### 2. Konfiguracja Bazy Danych (MySQL)
+1. Uruchom MySQL (np. przez XAMPP)
+2. Utwórz bazę danych i tabele uruchamiając plik `server/database.sql`:
+   ```sql
+   -- W phpMyAdmin lub MySQL Workbench wykonaj zawartość pliku server/database.sql
+   ```
+3. Skopiuj plik `.env.example` na `.env` w folderze `server/`:
+   ```bash
+   cd server
+   cp .env.example .env
+   ```
+4. Edytuj `server/.env` i ustaw swoje dane dostępowe do MySQL:
+   ```
+   DB_HOST=localhost
+   DB_USER=root
+   DB_PASSWORD=twoje_haslo
+   DB_NAME=komunikator_db
+   ```
+
+### 3. Instalacja i Uruchomienie Serwera (Backend)
 ```bash
 cd server
 npm install
 npm start
 ```
-Serwer uruchomi się na porcie 3001.
+Serwer uruchomi się na porcie **3001**.
 
-### 3. Klient (Frontend)
+### 4. Instalacja i Uruchomienie Klienta (Frontend)
+Otwórz nowe okno terminala:
 ```bash
 cd client
 npm install
 npm run dev
 ```
-Aplikacja będzie dostępna pod adresem `http://localhost:5173`.
+Aplikacja będzie dostępna pod adresem **http://localhost:5173**.
+
+### 5. Gotowe!
+Otwórz przeglądarkę i przejdź do `http://localhost:5173`. Możesz się zarejestrować i zacząć czatować!

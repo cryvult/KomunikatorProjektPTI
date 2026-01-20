@@ -125,7 +125,7 @@ export default function Chat({ user, onLogout }) {
             {/* Modern Sidebar */}
             <div style={{ width: '280px', background: 'var(--panel-bg)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
                 <div style={{ padding: '2rem', borderBottom: '1px solid var(--border-color)' }}>
-                    <h2 style={{ margin: 0, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontSize: '1.5rem', fontWeight: '700' }}>
+                    <h2 style={{ margin: 0, color: 'white', fontSize: '1.5rem', fontWeight: '700' }}>
                         Komunikator
                     </h2>
                 </div>
@@ -137,8 +137,8 @@ export default function Chat({ user, onLogout }) {
                         style={{
                             width: '100%',
                             marginBottom: '1rem',
-                            background: currentRoom === 'public' ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-                            color: currentRoom === 'public' ? '#8B5CF6' : 'var(--text-primary)',
+                            background: currentRoom === 'public' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+                            color: currentRoom === 'public' ? '#FFFFFF' : 'var(--text-primary)',
                             boxShadow: 'none',
                             justifyContent: 'flex-start',
                             display: 'flex',

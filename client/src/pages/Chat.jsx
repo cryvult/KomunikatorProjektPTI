@@ -15,21 +15,15 @@ export default function Chat({ user, onLogout }) {
     const messagesEndRef = useRef(null);
     const fileInputRef = useRef(null);
 
-    // Inicjalizacja Socket.io
     useEffect(() => {
         const newSocket = io(SOCKET_URL);
         setSocket(newSocket);
-
         return () => newSocket.close();
     }, []);
 
-    // Obsługa pokoju i wiadomości
     useEffect(() => {
         if (!socket) return;
-
         socket.emit('join_room', currentRoom);
-
-        // Pobierz historię
         fetchHistory(currentRoom);
 
         const handleReceiveMessage = (data) => {
@@ -37,15 +31,12 @@ export default function Chat({ user, onLogout }) {
                 setMessages((prev) => [...prev, data]);
             }
         };
-
         socket.on('receive_message', handleReceiveMessage);
-
         return () => {
             socket.off('receive_message', handleReceiveMessage);
         };
     }, [socket, currentRoom]);
 
-    // Scroll do dołu
     useEffect(() => {
         messagesEndRef.current?.scrollIntoView({ behavior: 'smooth' });
     }, [messages]);
@@ -61,7 +52,6 @@ export default function Chat({ user, onLogout }) {
 
     const sendMessage = async () => {
         if (inputMessage.trim() === '') return;
-
         const messageData = {
             room: currentRoom,
             sender_id: user.id,
@@ -69,7 +59,6 @@ export default function Chat({ user, onLogout }) {
             content: inputMessage,
             created_at: new Date().toISOString(),
         };
-
         await socket.emit('send_message', messageData);
         setInputMessage('');
         setShowEmojiPicker(false);
@@ -78,15 +67,12 @@ export default function Chat({ user, onLogout }) {
     const handleFileUpload = async (e) => {
         const file = e.target.files[0];
         if (!file) return;
-
         const formData = new FormData();
         formData.append('file', file);
-
         try {
             const res = await axios.post(`${SOCKET_URL}/upload`, formData, {
                 headers: { 'Content-Type': 'multipart/form-data' }
             });
-
             const messageData = {
                 room: currentRoom,
                 sender_id: user.id,
@@ -96,9 +82,7 @@ export default function Chat({ user, onLogout }) {
                 file_type: res.data.fileType,
                 created_at: new Date().toISOString(),
             };
-
             await socket.emit('send_message', messageData);
-
         } catch (err) {
             console.error("Upload error", err);
             alert("Błąd wysyłania pliku");
@@ -119,7 +103,6 @@ export default function Chat({ user, onLogout }) {
         if (roomName) {
             setCurrentRoom(roomName);
             setCustomRoomInput('');
-
             if (roomName !== 'public' && !savedRooms.includes(roomName)) {
                 const newRooms = [...savedRooms, roomName];
                 setSavedRooms(newRooms);
@@ -137,106 +120,154 @@ export default function Chat({ user, onLogout }) {
     };
 
     return (
-        <div style={{ display: 'flex', width: '100vw', height: '100vh', padding: '20px', boxSizing: 'border-box', gap: '20px' }}>
+        <div style={{ display: 'flex', width: '100vw', height: '100vh', padding: '0', background: 'var(--bg-color)', overflow: 'hidden' }}>
 
-            {/* Sidebar - Lista Pokoi */}
-            <div className="glass-panel" style={{ width: '250px', display: 'flex', flexDirection: 'column', padding: '1.5rem' }}>
-                <h3 style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '1rem', marginBottom: '1rem' }}>Pokoje</h3>
-
-                <button
-                    className="btn"
-                    style={{ marginBottom: '0.5rem', background: currentRoom === 'public' ? 'var(--accent-hover)' : 'rgba(255,255,255,0.1)' }}
-                    onClick={() => setCurrentRoom('public')}
-                >
-                    # Publiczny
-                </button>
-
-                <div style={{ flex: 1, overflowY: 'auto', marginBottom: '1rem' }}>
-                    {savedRooms.map(room => (
-                        <div key={room} style={{ display: 'flex', marginBottom: '0.5rem' }}>
-                            <button
-                                className="btn"
-                                style={{
-                                    flex: 1,
-                                    background: currentRoom === room ? 'var(--accent-hover)' : 'rgba(255,255,255,0.05)',
-                                    fontSize: '0.9rem',
-                                    padding: '0.5rem 1rem',
-                                    textAlign: 'left'
-                                }}
-                                onClick={() => setCurrentRoom(room)}
-                            >
-                                # {room}
-                            </button>
-                            <button
-                                onClick={(e) => removeRoom(room, e)}
-                                style={{ background: 'transparent', border: 'none', color: 'var(--text-secondary)', cursor: 'pointer', marginLeft: '5px' }}
-                            >
-                                ✕
-                            </button>
-                        </div>
-                    ))}
+            {/* Modern Sidebar */}
+            <div style={{ width: '280px', background: 'var(--panel-bg)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
+                <div style={{ padding: '2rem', borderBottom: '1px solid var(--border-color)' }}>
+                    <h2 style={{ margin: 0, background: 'var(--primary-gradient)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent', fontSize: '1.5rem', fontWeight: '700' }}>
+                        Komunikator
+                    </h2>
                 </div>
 
-                <div>
-                    <p style={{ fontSize: '0.8rem', color: 'var(--text-secondary)', marginBottom: '0.5rem' }}>Dołącz do nowego pokoju:</p>
-                    <div style={{ display: 'flex', gap: '5px' }}>
-                        <input
-                            className="input-field"
-                            style={{ marginBottom: 0, padding: '0.5rem' }}
-                            placeholder="Nazwa pokoju..."
-                            value={customRoomInput}
-                            onChange={(e) => setCustomRoomInput(e.target.value)}
-                        />
-                        <button className="btn" style={{ padding: '0.5rem', borderRadius: '8px' }} onClick={joinCustomRoom}>+</button>
+                <div style={{ padding: '1.5rem', flex: 1, overflowY: 'auto' }}>
+                    <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: 0 }}>Główne</h4>
+                    <button
+                        className="btn"
+                        style={{
+                            width: '100%',
+                            marginBottom: '1rem',
+                            background: currentRoom === 'public' ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+                            color: currentRoom === 'public' ? '#8B5CF6' : 'var(--text-primary)',
+                            boxShadow: 'none',
+                            justifyContent: 'flex-start',
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '10px'
+                        }}
+                        onClick={() => setCurrentRoom('public')}
+                    >
+                        <span style={{ fontSize: '1.2rem' }}>#</span> Publiczny
+                    </button>
+
+                    <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '1.5rem' }}>Twoje Pokoje</h4>
+                    <div style={{ display: 'flex', flexDirection: 'column', gap: '5px' }}>
+                        {savedRooms.map(room => (
+                            <div key={room} style={{ display: 'flex', alignItems: 'center', group: 'room-item' }}>
+                                <button
+                                    className="btn"
+                                    style={{
+                                        flex: 1,
+                                        background: currentRoom === room ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
+                                        color: currentRoom === room ? '#8B5CF6' : 'var(--text-primary)',
+                                        boxShadow: 'none',
+                                        textAlign: 'left',
+                                        padding: '0.6rem 1rem',
+                                        transition: 'all 0.2s',
+                                        opacity: currentRoom === room ? 1 : 0.7
+                                    }}
+                                    onClick={() => setCurrentRoom(room)}
+                                >
+                                    # {room}
+                                </button>
+                                <button
+                                    onClick={(e) => removeRoom(room, e)}
+                                    style={{ background: 'transparent', border: 'none', color: 'var(--border-color)', cursor: 'pointer', padding: '0 10px', transition: 'color 0.2s' }}
+                                    onMouseOver={(e) => e.target.style.color = 'var(--danger-color)'}
+                                    onMouseOut={(e) => e.target.style.color = 'var(--border-color)'}
+                                >
+                                    ✕
+                                </button>
+                            </div>
+                        ))}
+                    </div>
+
+                    <div style={{ marginTop: '1.5rem' }}>
+                        <div style={{ position: 'relative' }}>
+                            <input
+                                className="input-field"
+                                style={{ paddingRight: '40px', marginBottom: 0, background: 'rgba(255,255,255,0.03)' }}
+                                placeholder="Dodaj pokój..."
+                                value={customRoomInput}
+                                onChange={(e) => setCustomRoomInput(e.target.value)}
+                                onKeyDown={(e) => e.key === 'Enter' && joinCustomRoom()}
+                            />
+                            <button
+                                onClick={joinCustomRoom}
+                                style={{
+                                    position: 'absolute', right: '5px', top: '50%', transform: 'translateY(-50%)',
+                                    background: 'var(--primary-gradient)', border: 'none', width: '28px', height: '28px',
+                                    borderRadius: '6px', color: 'white', cursor: 'pointer', display: 'flex', alignItems: 'center', justifyContent: 'center'
+                                }}
+                            >
+                                +
+                            </button>
+                        </div>
                     </div>
                 </div>
 
-                <div style={{ marginTop: '2rem', paddingTop: '1rem', borderTop: '1px solid var(--glass-border)' }}>
-                    <div style={{ display: 'flex', alignItems: 'center', gap: '10px', marginBottom: '10px' }}>
-                        <div style={{ width: '30px', height: '30px', borderRadius: '50%', background: 'var(--accent-color)', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--primary-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
                             {user.username[0].toUpperCase()}
                         </div>
-                        <span>{user.username}</span>
+                        <div>
+                            <div style={{ fontWeight: '600' }}>{user.username}</div>
+                            <div style={{ fontSize: '0.75rem', color: 'var(--success-color)' }}>Online</div>
+                        </div>
                     </div>
-                    <button onClick={onLogout} style={{ background: 'transparent', border: '1px solid var(--danger-color)', color: 'var(--danger-color)', padding: '0.5rem 1rem', borderRadius: '4px', cursor: 'pointer', width: '100%' }}>
+                    <button onClick={onLogout} style={{ width: '100%', background: 'transparent', border: '1px solid var(--border-color)', color: 'var(--text-secondary)', padding: '0.6rem', borderRadius: 'var(--radius-sm)', cursor: 'pointer', transition: 'all 0.2s' }}>
                         Wyloguj
                     </button>
                 </div>
             </div>
 
             {/* Main Chat Area */}
-            <div className="glass-panel" style={{ flex: 1, display: 'flex', flexDirection: 'column', padding: '0' }}>
+            <div style={{ flex: 1, display: 'flex', flexDirection: 'column', position: 'relative' }}>
 
                 {/* Header */}
-                <div style={{ padding: '1rem 2rem', borderBottom: '1px solid var(--glass-border)', background: 'rgba(0,0,0,0.1)', borderTopLeftRadius: '16px', borderTopRightRadius: '16px' }}>
-                    <h3>#{currentRoom}</h3>
+                <div style={{ height: '80px', display: 'flex', alignItems: 'center', padding: '0 2rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-color)' }}>
+                    <div>
+                        <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
+                            <span style={{ color: '#8B5CF6', fontSize: '1.5rem' }}>#</span>
+                            {currentRoom}
+                        </h3>
+                        <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Lista wiadomości</span>
+                    </div>
                 </div>
 
-                {/* Messages List */}
-                <div style={{ flex: 1, overflowY: 'auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+                {/* Messages */}
+                <div style={{ flex: 1, overflowY: 'auto', padding: '2rem', display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
                     {messages.map((msg, index) => {
                         const isMe = msg.sender_id === user.id;
                         return (
-                            <div key={index} style={{ alignSelf: isMe ? 'flex-end' : 'flex-start', maxWidth: '70%' }}>
-                                <div style={{ fontSize: '0.75rem', color: 'var(--text-secondary)', marginBottom: '4px', textAlign: isMe ? 'right' : 'left' }}>
-                                    {msg.username || msg.sender_name} • {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                            <div key={index} style={{ alignSelf: isMe ? 'flex-end' : 'flex-start', maxWidth: '60%', display: 'flex', flexDirection: 'column', alignItems: isMe ? 'flex-end' : 'flex-start' }}>
+                                <div style={{ display: 'flex', alignItems: 'baseline', gap: '8px', marginBottom: '6px' }}>
+                                    <span style={{ fontWeight: '600', fontSize: '0.9rem', color: isMe ? 'var(--text-primary)' : 'var(--text-primary)' }}>
+                                        {isMe ? 'Ty' : msg.username || msg.sender_name}
+                                    </span>
+                                    <span style={{ fontSize: '0.7rem', color: 'var(--text-secondary)' }}>
+                                        {new Date(msg.created_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
+                                    </span>
                                 </div>
+
                                 <div style={{
-                                    padding: '1rem',
-                                    borderRadius: '12px',
-                                    background: isMe ? 'var(--accent-color)' : 'rgba(255,255,255,0.1)',
-                                    borderBottomRightRadius: isMe ? '2px' : '12px',
-                                    borderBottomLeftRadius: isMe ? '12px' : '2px',
-                                    wordBreak: 'break-word'
+                                    padding: '1rem 1.5rem',
+                                    borderRadius: isMe ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
+                                    background: isMe ? 'var(--primary-gradient)' : 'var(--panel-bg)',
+                                    color: 'white',
+                                    boxShadow: isMe ? 'var(--primary-shadow)' : '0 2px 10px rgba(0,0,0,0.1)',
+                                    border: isMe ? 'none' : '1px solid var(--border-color)',
+                                    lineHeight: '1.5'
                                 }}>
                                     {msg.content}
                                     {msg.file_path && (
-                                        <div style={{ marginTop: '10px' }}>
+                                        <div style={{ marginTop: '12px', paddingTop: '12px', borderTop: '1px solid rgba(255,255,255,0.1)' }}>
                                             {msg.file_type && msg.file_type.startsWith('image/') ? (
-                                                <img src={msg.file_path} alt="attachment" style={{ maxWidth: '200px', borderRadius: '8px' }} />
+                                                <img src={msg.file_path} alt="attachment" style={{ maxWidth: '100%', borderRadius: '8px' }} />
                                             ) : (
-                                                <a href={msg.file_path} target="_blank" rel="noopener noreferrer" style={{ color: 'white', textDecoration: 'underline' }}>
-                                                    📎 Pobierz plik
+                                                <a href={msg.file_path} target="_blank" rel="noopener noreferrer" style={{ color: 'white', display: 'flex', alignItems: 'center', gap: '5px', textDecoration: 'none' }}>
+                                                    <span style={{ fontSize: '1.2rem' }}>📄</span> Pobierz plik
                                                 </a>
                                             )}
                                         </div>
@@ -249,46 +280,53 @@ export default function Chat({ user, onLogout }) {
                 </div>
 
                 {/* Input Area */}
-                <div style={{ padding: '1.5rem', background: 'rgba(0,0,0,0.2)', borderBottomLeftRadius: '16px', borderBottomRightRadius: '16px', display: 'flex', alignItems: 'center', gap: '10px', position: 'relative' }}>
+                <div style={{ padding: '1.5rem 2rem', background: 'var(--bg-color)' }}>
+                    <div className="glass-panel" style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', gap: '10px', background: 'var(--input-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)' }}>
+                        <button
+                            style={{ width: '40px', height: '40px', borderRadius: '50%', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '1.2rem', transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            onClick={() => fileInputRef.current.click()}
+                        >
+                            <span style={{ filter: 'grayscale(1) brightness(1.5)' }}>📎</span>
+                        </button>
+
+                        <button
+                            style={{ width: '40px', height: '40px', borderRadius: '50%', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+                        >
+                            <span style={{ filter: 'grayscale(1) brightness(1.5)' }}>😊</span>
+                        </button>
+
+                        <input
+                            style={{ flex: 1, background: 'transparent', border: 'none', color: 'white', fontSize: '1rem', padding: '10px', outline: 'none', fontFamily: 'Outfit, sans-serif' }}
+                            placeholder={`Napisz na #${currentRoom}...`}
+                            value={inputMessage}
+                            onChange={(e) => setInputMessage(e.target.value)}
+                            onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
+                        />
+
+                        <button
+                            onClick={sendMessage}
+                            disabled={!inputMessage.trim()}
+                            style={{
+                                width: '45px', height: '45px', borderRadius: '14px', border: 'none',
+                                background: inputMessage.trim() ? 'var(--primary-gradient)' : 'rgba(255,255,255,0.1)',
+                                cursor: inputMessage.trim() ? 'pointer' : 'default',
+                                display: 'flex', alignItems: 'center', justifyContent: 'center',
+                                transition: 'all 0.2s',
+                                transform: inputMessage.trim() ? 'scale(1)' : 'scale(0.9)'
+                            }}
+                        >
+                            <span style={{ color: 'white', fontSize: '1.2rem' }}>➤</span>
+                        </button>
+                    </div>
 
                     {showEmojiPicker && (
-                        <div style={{ position: 'absolute', bottom: '80px', left: '20px', zIndex: 100 }}>
+                        <div style={{ position: 'absolute', bottom: '100px', left: '80px', zIndex: 100, boxShadow: '0 20px 50px rgba(0,0,0,0.5)' }}>
                             <EmojiPicker onEmojiClick={(emoji) => setInputMessage(prev => prev + emoji.emoji)} theme="dark" />
                         </div>
                     )}
 
-                    <button
-                        style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', filter: 'grayscale(100%) brightness(200%)' }}
-                        onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                    >
-                        😊
-                    </button>
-
-                    <button
-                        style={{ background: 'none', border: 'none', fontSize: '1.5rem', cursor: 'pointer', filter: 'grayscale(100%) brightness(200%)' }}
-                        onClick={() => fileInputRef.current.click()}
-                    >
-                        📎
-                    </button>
-                    <input
-                        type="file"
-                        style={{ display: 'none' }}
-                        ref={fileInputRef}
-                        onChange={handleFileUpload}
-                    />
-
-                    <input
-                        className="input-field"
-                        style={{ marginBottom: 0, borderRadius: '25px', padding: '10px 20px' }}
-                        placeholder="Napisz wiadomość..."
-                        value={inputMessage}
-                        onChange={(e) => setInputMessage(e.target.value)}
-                        onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
-                    />
-
-                    <button className="btn" onClick={sendMessage} style={{ borderRadius: '50%', padding: '12px', width: '50px', height: '50px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                        ➤
-                    </button>
+                    <input type="file" style={{ display: 'none' }} ref={fileInputRef} onChange={handleFileUpload} />
                 </div>
             </div>
         </div>

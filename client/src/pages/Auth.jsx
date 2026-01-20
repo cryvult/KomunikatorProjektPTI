@@ -1,0 +1,70 @@
+import { useState } from 'react';
+import axios from 'axios';
+
+export default function Auth({ onLogin }) {
+    const [isLogin, setIsLogin] = useState(true);
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
+    const [error, setError] = useState('');
+
+    const handleSubmit = async (e) => {
+        e.preventDefault();
+        setError('');
+
+        // Używamy IP serwera lub localhost
+        const API_URL = 'http://localhost:3001';
+
+        try {
+            if (isLogin) {
+                const res = await axios.post(`${API_URL}/login`, { username, password });
+                onLogin(res.data);
+            } else {
+                await axios.post(`${API_URL}/register`, { username, password });
+                setIsLogin(true);
+                alert('Rejestracja udana! Możesz się zalogować.');
+            }
+        } catch (err) {
+            setError(err.response?.data?.error || 'Wystąpił błąd');
+        }
+    };
+
+    return (
+        <div className="glass-panel fade-in" style={{ maxWidth: '400px', width: '100%', textAlign: 'center' }}>
+            <h2 style={{ marginBottom: '2rem' }}>{isLogin ? 'Witaj ponownie' : 'Dołącz do nas'}</h2>
+
+            {error && <div style={{ color: 'var(--danger-color)', marginBottom: '1rem' }}>{error}</div>}
+
+            <form onSubmit={handleSubmit}>
+                <input
+                    type="text"
+                    placeholder="Nazwa użytkownika"
+                    className="input-field"
+                    value={username}
+                    onChange={(e) => setUsername(e.target.value)}
+                    required
+                />
+                <input
+                    type="password"
+                    placeholder="Hasło"
+                    className="input-field"
+                    value={password}
+                    onChange={(e) => setPassword(e.target.value)}
+                    required
+                />
+                <button type="submit" className="btn" style={{ width: '100%', marginTop: '1rem' }}>
+                    {isLogin ? 'Zaloguj się' : 'Zarejestruj się'}
+                </button>
+            </form>
+
+            <div style={{ marginTop: '1.5rem', color: 'var(--text-secondary)', fontSize: '0.9rem' }}>
+                {isLogin ? 'Nie masz konta? ' : 'Masz już konto? '}
+                <span
+                    style={{ color: 'var(--accent-color)', cursor: 'pointer', fontWeight: 'bold' }}
+                    onClick={() => setIsLogin(!isLogin)}
+                >
+                    {isLogin ? 'Zarejestruj się' : 'Zaloguj się'}
+                </span>
+            </div>
+        </div>
+    );
+}

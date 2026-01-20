@@ -1,21 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Monochrome Dark Palette */
-  --bg-color: #000000;
-  --panel-bg: #121212;
-  --border-color: #333333;
-  --text-primary: #FFFFFF;
-  --text-secondary: #888888;
+  /* Light Monochrome Palette */
+  --bg-color: #F3F4F6;
+  /* Light Grey Background */
+  --panel-bg: #FFFFFF;
+  /* White Panels */
+  --border-color: #E5E7EB;
+  /* Light Grey Border */
+  --text-primary: #111827;
+  /* Almost Black Text */
+  --text-secondary: #6B7280;
+  /* Grey Text */
 
-  /* Monochrome Gradient */
-  --primary-gradient: linear-gradient(135deg, #333333 0%, #555555 100%);
-  --primary-shadow: 0 4px 20px rgba(255, 255, 255, 0.05);
+  /* Monochrome Gradient (Black/Grey) */
+  --primary-gradient: linear-gradient(135deg, #1F2937 0%, #374151 100%);
+  --primary-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
-  --danger-color: #ffffff;
-  --success-color: #888888;
+  --danger-color: #EF4444;
+  --success-color: #10B981;
 
-  --input-bg: #1a1a1a;
+  --input-bg: #F9FAFB;
+  /* Very light grey input */
 
   --radius-lg: 24px;
   --radius-md: 16px;
@@ -43,7 +49,8 @@ body {
 .glass-panel {
   background: var(--panel-bg);
   border: 1px solid var(--border-color);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  /* Softer shadow for light mode */
   border-radius: var(--radius-lg);
   padding: 2rem;
   transition: all 0.3s ease;
@@ -51,25 +58,25 @@ body {
 
 /* Buttons */
 .btn {
-  background: white;
-  border: 1px solid white;
+  background: var(--text-primary);
+  border: 1px solid var(--text-primary);
   border-radius: var(--radius-sm);
   padding: 0.8rem 1.5rem;
-  color: black;
+  color: white;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: none;
   font-size: 0.95rem;
-  box-shadow: none;
+  box-shadow: var(--primary-shadow);
   letter-spacing: 0.5px;
 }
 
 .btn:hover {
-  background: black;
-  color: white;
+  background: white;
+  color: var(--text-primary);
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
 /* Inputs */
@@ -78,7 +85,7 @@ body {
   border: 1px solid var(--border-color);
   padding: 14px 18px;
   border-radius: var(--radius-sm);
-  color: white;
+  color: var(--text-primary);
   width: 100%;
   box-sizing: border-box;
   margin-bottom: 1rem;
@@ -89,9 +96,9 @@ body {
 
 .input-field:focus {
   outline: none;
-  border-color: #ffffff;
-  box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.2);
-  background: #222;
+  border-color: var(--text-primary);
+  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  background: white;
 }
 
 /* Scrollbar */
@@ -104,12 +111,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #333;
+  background: #D1D5DB;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #555;
+  background: #9CA3AF;
 }
 
 .fade-in {

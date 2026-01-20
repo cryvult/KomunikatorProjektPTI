@@ -125,7 +125,7 @@ export default function Chat({ user, onLogout }) {
             {/* Modern Sidebar */}
             <div style={{ width: '280px', background: 'var(--panel-bg)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
                 <div style={{ padding: '2rem', borderBottom: '1px solid var(--border-color)' }}>
-                    <h2 style={{ margin: 0, color: 'white', fontSize: '1.5rem', fontWeight: '700' }}>
+                    <h2 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: '700' }}>
                         Komunikator
                     </h2>
                 </div>
@@ -137,8 +137,8 @@ export default function Chat({ user, onLogout }) {
                         style={{
                             width: '100%',
                             marginBottom: '1rem',
-                            background: currentRoom === 'public' ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-                            color: currentRoom === 'public' ? '#FFFFFF' : 'var(--text-primary)',
+                            background: currentRoom === 'public' ? 'var(--text-primary)' : 'transparent',
+                            color: currentRoom === 'public' ? 'var(--bg-color)' : 'var(--text-primary)',
                             boxShadow: 'none',
                             justifyContent: 'flex-start',
                             display: 'flex',
@@ -158,8 +158,8 @@ export default function Chat({ user, onLogout }) {
                                     className="btn"
                                     style={{
                                         flex: 1,
-                                        background: currentRoom === room ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
-                                        color: currentRoom === room ? '#FFFFFF' : 'var(--text-primary)',
+                                        background: currentRoom === room ? 'var(--text-primary)' : 'transparent',
+                                        color: currentRoom === room ? 'var(--bg-color)' : 'var(--text-primary)',
                                         boxShadow: 'none',
                                         textAlign: 'left',
                                         padding: '0.6rem 1rem',
@@ -229,7 +229,7 @@ export default function Chat({ user, onLogout }) {
                 <div style={{ height: '80px', display: 'flex', alignItems: 'center', padding: '0 2rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-color)' }}>
                     <div>
                         <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ color: '#FFFFFF', fontSize: '1.5rem' }}>#</span>
+                            <span style={{ color: 'var(--text-primary)', fontSize: '1.5rem' }}>#</span>
                             {currentRoom}
                         </h3>
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Lista wiadomości</span>
@@ -255,8 +255,8 @@ export default function Chat({ user, onLogout }) {
                                     padding: '1rem 1.5rem',
                                     borderRadius: isMe ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
                                     background: isMe ? 'var(--primary-gradient)' : 'var(--panel-bg)',
-                                    color: 'white',
-                                    boxShadow: isMe ? 'var(--primary-shadow)' : '0 2px 10px rgba(0,0,0,0.1)',
+                                    color: isMe ? 'white' : 'var(--text-primary)',
+                                    boxShadow: isMe ? 'var(--primary-shadow)' : '0 2px 10px rgba(0,0,0,0.05)',
                                     border: isMe ? 'none' : '1px solid var(--border-color)',
                                     lineHeight: '1.5'
                                 }}>

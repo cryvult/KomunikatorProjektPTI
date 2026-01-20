@@ -1,31 +1,31 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Light Monochrome Palette */
-  --bg-color: #F3F4F6;
-  /* Light Grey Background */
+  /* Concrete / Silver Palette */
+  --bg-color: #E6E6E6;
+  /* Neutral Light Grey Background */
   --panel-bg: #FFFFFF;
   /* White Panels */
-  --border-color: #E5E7EB;
-  /* Light Grey Border */
-  --text-primary: #111827;
-  /* Almost Black Text */
-  --text-secondary: #6B7280;
-  /* Grey Text */
+  --border-color: #CCCCCC;
+  /* Soft Grey Border */
+  --text-primary: #333333;
+  /* Dark Grey Text (Not Black) */
+  --text-secondary: #777777;
+  /* Medium Grey Text */
 
-  /* Monochrome Gradient (Black/Grey) */
-  --primary-gradient: linear-gradient(135deg, #1F2937 0%, #374151 100%);
-  --primary-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+  /* Accents - "Slightly Dark" */
+  --primary-gradient: linear-gradient(135deg, #444444 0%, #666666 100%);
+  --primary-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
 
-  --danger-color: #EF4444;
-  --success-color: #10B981;
+  --input-bg: #F2F2F2;
+  /* Very Light Grey Input */
 
-  --input-bg: #F9FAFB;
-  /* Very light grey input */
+  --danger-color: #ff4d4d;
+  --success-color: #4CAF50;
 
-  --radius-lg: 24px;
-  --radius-md: 16px;
-  --radius-sm: 12px;
+  --radius-lg: 20px;
+  --radius-md: 12px;
+  --radius-sm: 8px;
 }
 
 body {
@@ -49,8 +49,8 @@ body {
 .glass-panel {
   background: var(--panel-bg);
   border: 1px solid var(--border-color);
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
-  /* Softer shadow for light mode */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
+  /* Soft/Medium shadow */
   border-radius: var(--radius-lg);
   padding: 2rem;
   transition: all 0.3s ease;
@@ -58,14 +58,14 @@ body {
 
 /* Buttons */
 .btn {
-  background: var(--text-primary);
-  border: 1px solid var(--text-primary);
+  background: #555555;
+  border: none;
   border-radius: var(--radius-sm);
   padding: 0.8rem 1.5rem;
   color: white;
-  font-weight: 600;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  transition: all 0.2s ease;
   text-transform: none;
   font-size: 0.95rem;
   box-shadow: var(--primary-shadow);
@@ -73,10 +73,9 @@ body {
 }
 
 .btn:hover {
-  background: white;
-  color: var(--text-primary);
+  background: #333333;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 /* Inputs */
@@ -96,14 +95,14 @@ body {
 
 .input-field:focus {
   outline: none;
-  border-color: var(--text-primary);
-  box-shadow: 0 0 0 2px rgba(0, 0, 0, 0.05);
+  border-color: #555555;
   background: white;
+  box-shadow: 0 0 0 2px rgba(85, 85, 85, 0.1);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 8px;
+  width: 6px;
 }
 
 ::-webkit-scrollbar-track {
@@ -111,28 +110,26 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #D1D5DB;
+  background: #BBBBBB;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #9CA3AF;
+  background: #999999;
 }
 
 .fade-in {
-  animation: fadeIn 0.4s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+  animation: fadeIn 0.4s ease-out forwards;
 }
 
 @keyframes fadeIn {
   from {
     opacity: 0;
-    transform: translateY(15px);
-    scale: 0.98;
+    transform: translateY(10px);
   }
 
   to {
     opacity: 1;
     transform: translateY(0);
-    scale: 1;
   }
 }

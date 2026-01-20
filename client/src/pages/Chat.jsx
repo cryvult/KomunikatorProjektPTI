@@ -158,8 +158,8 @@ export default function Chat({ user, onLogout }) {
                                     className="btn"
                                     style={{
                                         flex: 1,
-                                        background: currentRoom === room ? 'rgba(99, 102, 241, 0.1)' : 'transparent',
-                                        color: currentRoom === room ? '#8B5CF6' : 'var(--text-primary)',
+                                        background: currentRoom === room ? 'rgba(255, 255, 255, 0.1)' : 'transparent',
+                                        color: currentRoom === room ? '#FFFFFF' : 'var(--text-primary)',
                                         boxShadow: 'none',
                                         textAlign: 'left',
                                         padding: '0.6rem 1rem',
@@ -229,7 +229,7 @@ export default function Chat({ user, onLogout }) {
                 <div style={{ height: '80px', display: 'flex', alignItems: 'center', padding: '0 2rem', borderBottom: '1px solid var(--border-color)', background: 'var(--bg-color)' }}>
                     <div>
                         <h3 style={{ margin: 0, display: 'flex', alignItems: 'center', gap: '10px' }}>
-                            <span style={{ color: '#8B5CF6', fontSize: '1.5rem' }}>#</span>
+                            <span style={{ color: '#FFFFFF', fontSize: '1.5rem' }}>#</span>
                             {currentRoom}
                         </h3>
                         <span style={{ fontSize: '0.8rem', color: 'var(--text-secondary)' }}>Lista wiadomości</span>

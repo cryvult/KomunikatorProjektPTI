@@ -1,27 +1,30 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Concrete / Silver Palette */
-  --bg-color: #1E3A8A;
-  /* Strong Blue Background */
-  /* Darker Blue Panels */
-  --panel-bg: #BFDBFE;
-  --border-color: #CCCCCC;
-  /* Soft Grey Border */
-  --text-primary: #333333;
-  /* Dark Grey Text (Not Black) */
-  --text-secondary: #777777;
-  /* Medium Grey Text */
+  /* Blue Harmony Palette */
+  --bg-color: #0F172A;
+  /* Deep Navy Blue Background */
+  --panel-bg: #1E293B;
+  /* Slate Blue Panels */
+  --border-color: #334155;
+  /* Medium Slate Border */
+  --text-primary: #F1F5F9;
+  /* Very Light Blue-White Text */
+  --text-secondary: #94A3B8;
+  /* Blue-Grey Text */
 
-  /* Accents - "Slightly Dark" */
-  --primary-gradient: linear-gradient(135deg, #444444 0%, #666666 100%);
-  --primary-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+  /* Blue Gradient Accents */
+  --primary-gradient: linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%);
+  /* Sky to Blue */
+  --primary-shadow: 0 8px 30px rgba(14, 165, 233, 0.3);
 
-  --input-bg: #F2F2F2;
-  /* Very Light Grey Input */
+  --input-bg: #1E293B;
+  /* Dark Slate Input */
+  --input-focus: #2563EB;
+  /* Bright Blue Focus */
 
-  --danger-color: #ff4d4d;
-  --success-color: #4CAF50;
+  --danger-color: #EF4444;
+  --success-color: #10B981;
 
   --radius-lg: 20px;
   --radius-md: 12px;
@@ -49,8 +52,7 @@ body {
 .glass-panel {
   background: var(--panel-bg);
   border: 1px solid var(--border-color);
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-  /* Soft/Medium shadow */
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
   border-radius: var(--radius-lg);
   padding: 2rem;
   transition: all 0.3s ease;
@@ -58,14 +60,14 @@ body {
 
 /* Buttons */
 .btn {
-  background: #555555;
+  background: var(--primary-gradient);
   border: none;
   border-radius: var(--radius-sm);
   padding: 0.8rem 1.5rem;
   color: white;
-  font-weight: 500;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   text-transform: none;
   font-size: 0.95rem;
   box-shadow: var(--primary-shadow);
@@ -73,9 +75,9 @@ body {
 }
 
 .btn:hover {
-  background: #333333;
   transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+  filter: brightness(1.1);
 }
 
 /* Inputs */
@@ -95,14 +97,14 @@ body {
 
 .input-field:focus {
   outline: none;
-  border-color: #555555;
-  background: white;
-  box-shadow: 0 0 0 2px rgba(85, 85, 85, 0.1);
+  border-color: var(--input-focus);
+  background: #0F172A;
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
 }
 
 /* Scrollbar */
 ::-webkit-scrollbar {
-  width: 6px;
+  width: 8px;
 }
 
 ::-webkit-scrollbar-track {
@@ -110,12 +112,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #BBBBBB;
+  background: #475569;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #999999;
+  background: #64748B;
 }
 
 .fade-in {

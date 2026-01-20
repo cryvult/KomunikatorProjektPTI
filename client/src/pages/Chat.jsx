@@ -71,7 +71,6 @@ export default function Chat({ user, onLogout }) {
         };
 
         await socket.emit('send_message', messageData);
-        setMessages((prev) => [...prev, messageData]);
         setInputMessage('');
         setShowEmojiPicker(false);
     };
@@ -99,7 +98,6 @@ export default function Chat({ user, onLogout }) {
             };
 
             await socket.emit('send_message', messageData);
-            setMessages((prev) => [...prev, messageData]);
 
         } catch (err) {
             console.error("Upload error", err);

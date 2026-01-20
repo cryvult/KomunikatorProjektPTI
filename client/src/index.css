@@ -1,27 +1,27 @@
 @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap');
 
 :root {
-  /* Blue Harmony Palette */
-  --bg-color: #0F172A;
-  /* Deep Navy Blue Background */
-  --panel-bg: #1E293B;
-  /* Slate Blue Panels */
-  --border-color: #334155;
-  /* Medium Slate Border */
-  --text-primary: #F1F5F9;
-  /* Very Light Blue-White Text */
-  --text-secondary: #94A3B8;
-  /* Blue-Grey Text */
+  /* Elegant Grey-Blue Palette */
+  --bg-color: #1E1E1E;
+  /* Dark Charcoal Background */
+  --panel-bg: #2A2A2A;
+  /* Grey Panels */
+  --border-color: #404040;
+  /* Medium Grey Border */
+  --text-primary: #E5E5E5;
+  /* Light Grey Text */
+  --text-secondary: #A0A0A0;
+  /* Medium Grey Text */
 
-  /* Blue Gradient Accents */
-  --primary-gradient: linear-gradient(135deg, #0EA5E9 0%, #3B82F6 100%);
-  /* Sky to Blue */
-  --primary-shadow: 0 8px 30px rgba(14, 165, 233, 0.3);
+  /* Blue Accent Gradient */
+  --primary-gradient: linear-gradient(135deg, #60A5FA 0%, #3B82F6 100%);
+  /* Light Blue to Blue */
+  --primary-shadow: 0 8px 30px rgba(96, 165, 250, 0.25);
 
-  --input-bg: #1E293B;
-  /* Dark Slate Input */
-  --input-focus: #2563EB;
-  /* Bright Blue Focus */
+  --input-bg: #252525;
+  /* Dark Grey Input */
+  --input-focus: #60A5FA;
+  /* Light Blue Focus */
 
   --danger-color: #EF4444;
   --success-color: #10B981;
@@ -76,7 +76,7 @@ body {
 
 .btn:hover {
   transform: translateY(-2px);
-  box-shadow: 0 12px 35px rgba(59, 130, 246, 0.4);
+  box-shadow: 0 12px 35px rgba(96, 165, 250, 0.35);
   filter: brightness(1.1);
 }
 
@@ -98,8 +98,8 @@ body {
 .input-field:focus {
   outline: none;
   border-color: var(--input-focus);
-  background: #0F172A;
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.2);
+  background: #1A1A1A;
+  box-shadow: 0 0 0 3px rgba(96, 165, 250, 0.2);
 }
 
 /* Scrollbar */
@@ -112,12 +112,12 @@ body {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #475569;
+  background: #505050;
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #64748B;
+  background: #60A5FA;
 }
 
 .fade-in {

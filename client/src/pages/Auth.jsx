@@ -6,10 +6,12 @@ export default function Auth({ onLogin }) {
     const [username, setUsername] = useState('');
     const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
 
     const handleSubmit = async (e) => {
         e.preventDefault();
         setError('');
+        setSuccess('');
 
         // Używamy IP serwera lub localhost
         const API_URL = 'http://localhost:3001';
@@ -20,8 +22,10 @@ export default function Auth({ onLogin }) {
                 onLogin(res.data);
             } else {
                 await axios.post(`${API_URL}/register`, { username, password });
+                setSuccess('Rejestracja udana! Możesz się zalogować.');
                 setIsLogin(true);
-                alert('Rejestracja udana! Możesz się zalogować.');
+                setUsername('');
+                setPassword('');
             }
         } catch (err) {
             setError(err.response?.data?.error || 'Wystąpił błąd');
@@ -32,7 +36,33 @@ export default function Auth({ onLogin }) {
         <div className="glass-panel fade-in" style={{ maxWidth: '400px', width: '100%', textAlign: 'center' }}>
             <h2 style={{ marginBottom: '2rem' }}>{isLogin ? 'Witaj ponownie' : 'Dołącz do nas'}</h2>
 
-            {error && <div style={{ color: 'var(--danger-color)', marginBottom: '1rem' }}>{error}</div>}
+            {error && (
+                <div style={{
+                    color: '#fff',
+                    backgroundColor: 'rgba(239, 68, 68, 0.2)',
+                    border: '1px solid var(--danger-color)',
+                    padding: '0.8rem',
+                    borderRadius: 'var(--radius-sm)',
+                    marginBottom: '1rem',
+                    fontSize: '0.9rem'
+                }}>
+                    {error}
+                </div>
+            )}
+
+            {success && (
+                <div style={{
+                    color: '#fff',
+                    backgroundColor: 'rgba(16, 185, 129, 0.2)',
+                    border: '1px solid var(--success-color)',
+                    padding: '0.8rem',
+                    borderRadius: 'var(--radius-sm)',
+                    marginBottom: '1rem',
+                    fontSize: '0.9rem'
+                }}>
+                    {success}
+                </div>
+            )}
 
             <form onSubmit={handleSubmit}>
                 <input

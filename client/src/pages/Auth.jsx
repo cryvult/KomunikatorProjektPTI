@@ -33,8 +33,9 @@ export default function Auth({ onLogin }) {
     };
 
     return (
-        <div className="glass-panel fade-in" style={{ maxWidth: '400px', width: '100%', textAlign: 'center' }}>
-            <h2 style={{ marginBottom: '2rem' }}>{isLogin ? 'Witaj ponownie' : 'Dołącz do nas'}</h2>
+        <div className="glass-panel fade-in" style={{ maxWidth: '450px', width: '100%', textAlign: 'center' }}>
+            <div style={{ color: 'var(--primary-accent)', fontSize: '0.7rem', letterSpacing: '8px', marginBottom: '0.5rem', fontWeight: 'bold' }}>LAMBORGHINI</div>
+            <h2 style={{ marginBottom: '2rem', textTransform: 'uppercase', letterSpacing: '3px' }}>{isLogin ? 'Automobili Login' : 'Create Account'}</h2>
 
             {error && (
                 <div style={{

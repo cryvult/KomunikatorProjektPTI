@@ -123,31 +123,29 @@ export default function Chat({ user, onLogout }) {
         <div style={{ display: 'flex', width: '100vw', height: '100vh', padding: '0', background: 'var(--bg-color)', overflow: 'hidden' }}>
 
             {/* Modern Sidebar */}
-            <div style={{ width: '280px', background: 'var(--panel-bg)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
-                <div style={{ padding: '2rem', borderBottom: '1px solid var(--border-color)' }}>
-                    <h2 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.5rem', fontWeight: '700' }}>
-                        Komunikator
+            <div className="sidebar" style={{ width: '300px', background: 'var(--panel-bg)', borderRight: '1px solid var(--border-color)', display: 'flex', flexDirection: 'column', zIndex: 10 }}>
+                <div style={{ padding: '2rem', borderBottom: '1px solid var(--border-color)', textAlign: 'center' }}>
+                    <div style={{ color: 'var(--primary-accent)', fontSize: '0.6rem', letterSpacing: '6px', marginBottom: '0.2rem', fontWeight: 'bold' }}>LAMBORGHINI</div>
+                    <h2 style={{ margin: 0, color: 'var(--text-primary)', fontSize: '1.2rem', fontWeight: '700', textTransform: 'uppercase', letterSpacing: '2px' }}>
+                        Comm Hub
                     </h2>
                 </div>
 
                 <div style={{ padding: '1.5rem', flex: 1, overflowY: 'auto' }}>
                     <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: 0 }}>Główne</h4>
                     <button
-                        className="btn"
+                        className={`btn room-btn ${currentRoom === 'public' ? 'active' : ''}`}
                         style={{
                             width: '100%',
                             marginBottom: '1rem',
-                            background: currentRoom === 'public' ? 'var(--text-primary)' : 'transparent',
-                            color: currentRoom === 'public' ? 'var(--bg-color)' : 'var(--text-primary)',
-                            boxShadow: 'none',
+                            background: currentRoom === 'public' ? 'var(--primary-accent)' : 'rgba(255,255,255,0.02)',
+                            color: currentRoom === 'public' ? 'black' : 'var(--text-primary)',
                             justifyContent: 'flex-start',
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px'
+                            padding: '0.8rem 1.5rem',
                         }}
                         onClick={() => setCurrentRoom('public')}
                     >
-                        <span style={{ fontSize: '1.2rem' }}>#</span> Publiczny
+                        # Publiczny
                     </button>
 
                     <h4 style={{ color: 'var(--text-secondary)', fontSize: '0.75rem', textTransform: 'uppercase', letterSpacing: '1px', marginTop: '1.5rem' }}>Twoje Pokoje</h4>
@@ -155,16 +153,13 @@ export default function Chat({ user, onLogout }) {
                         {savedRooms.map(room => (
                             <div key={room} style={{ display: 'flex', alignItems: 'center', group: 'room-item' }}>
                                 <button
-                                    className="btn"
+                                    className={`btn room-btn ${currentRoom === room ? 'active' : ''}`}
                                     style={{
                                         flex: 1,
-                                        background: currentRoom === room ? 'var(--text-primary)' : 'transparent',
-                                        color: currentRoom === room ? 'var(--bg-color)' : 'var(--text-primary)',
-                                        boxShadow: 'none',
+                                        background: currentRoom === room ? 'var(--primary-accent)' : 'rgba(255,255,255,0.02)',
+                                        color: currentRoom === room ? 'black' : 'var(--text-primary)',
                                         textAlign: 'left',
                                         padding: '0.6rem 1rem',
-                                        transition: 'all 0.2s',
-                                        opacity: currentRoom === room ? 1 : 0.7
                                     }}
                                     onClick={() => setCurrentRoom(room)}
                                 >
@@ -208,7 +203,7 @@ export default function Chat({ user, onLogout }) {
 
                 <div style={{ padding: '1.5rem', borderTop: '1px solid var(--border-color)' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '15px' }}>
-                        <div style={{ width: '40px', height: '40px', borderRadius: '12px', background: 'var(--primary-gradient)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
+                        <div style={{ width: '40px', height: '40px', borderRadius: '0', border: '1px solid var(--primary-accent)', background: 'transparent', color: 'var(--primary-accent)', display: 'flex', alignItems: 'center', justifyContent: 'center', fontWeight: 'bold', fontSize: '1.2rem' }}>
                             {user.username[0].toUpperCase()}
                         </div>
                         <div>
@@ -251,14 +246,13 @@ export default function Chat({ user, onLogout }) {
                                     </span>
                                 </div>
 
-                                <div style={{
+                                <div className="chat-bubble" style={{
                                     padding: '1rem 1.5rem',
-                                    borderRadius: isMe ? '20px 20px 4px 20px' : '20px 20px 20px 4px',
-                                    background: isMe ? 'var(--primary-gradient)' : 'var(--panel-bg)',
-                                    color: isMe ? 'white' : 'var(--text-primary)',
-                                    boxShadow: isMe ? 'var(--primary-shadow)' : '0 2px 10px rgba(0,0,0,0.05)',
+                                    background: isMe ? 'var(--primary-accent)' : 'var(--panel-bg)',
+                                    color: isMe ? 'black' : 'var(--text-primary)',
                                     border: isMe ? 'none' : '1px solid var(--border-color)',
-                                    lineHeight: '1.5'
+                                    lineHeight: '1.5',
+                                    fontWeight: isMe ? '600' : '400'
                                 }}>
                                     {msg.content}
                                     {msg.file_path && (
@@ -281,24 +275,17 @@ export default function Chat({ user, onLogout }) {
 
                 {/* Input Area */}
                 <div style={{ padding: '1.5rem 2rem', background: 'var(--bg-color)' }}>
-                    <div className="glass-panel" style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', gap: '10px', background: 'var(--input-bg)', border: '1px solid var(--border-color)', borderRadius: 'var(--radius-lg)' }}>
+                    <div style={{ padding: '0.5rem', display: 'flex', alignItems: 'center', gap: '10px', background: 'rgba(0,0,0,0.4)', border: '1px solid var(--border-color)', borderRadius: '0' }}>
                         <button
-                            style={{ width: '40px', height: '40px', borderRadius: '50%', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '1.2rem', transition: 'background 0.2s', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
+                            style={{ width: '40px', height: '40px', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
                             onClick={() => fileInputRef.current.click()}
                         >
-                            <span style={{ filter: 'grayscale(1) brightness(1.5)' }}>📎</span>
-                        </button>
-
-                        <button
-                            style={{ width: '40px', height: '40px', borderRadius: '50%', border: 'none', background: 'transparent', cursor: 'pointer', fontSize: '1.2rem', display: 'flex', alignItems: 'center', justifyContent: 'center' }}
-                            onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-                        >
-                            <span style={{ filter: 'grayscale(1) brightness(1.5)' }}>😊</span>
+                            <span style={{ color: 'var(--text-secondary)' }}>📎</span>
                         </button>
 
                         <input
                             style={{ flex: 1, background: 'transparent', border: 'none', color: 'white', fontSize: '1rem', padding: '10px', outline: 'none', fontFamily: 'Outfit, sans-serif' }}
-                            placeholder={`Napisz na #${currentRoom}...`}
+                            placeholder={`SYSTEM MESSAGE ON #${currentRoom.toUpperCase()}...`}
                             value={inputMessage}
                             onChange={(e) => setInputMessage(e.target.value)}
                             onKeyDown={(e) => e.key === 'Enter' && sendMessage()}
@@ -308,15 +295,16 @@ export default function Chat({ user, onLogout }) {
                             onClick={sendMessage}
                             disabled={!inputMessage.trim()}
                             style={{
-                                width: '45px', height: '45px', borderRadius: '14px', border: 'none',
-                                background: inputMessage.trim() ? 'var(--primary-gradient)' : 'rgba(255,255,255,0.1)',
+                                width: '45px', height: '45px', border: 'none',
+                                background: inputMessage.trim() ? 'var(--primary-accent)' : '#222',
+                                color: inputMessage.trim() ? 'black' : '#444',
                                 cursor: inputMessage.trim() ? 'pointer' : 'default',
                                 display: 'flex', alignItems: 'center', justifyContent: 'center',
                                 transition: 'all 0.2s',
-                                transform: inputMessage.trim() ? 'scale(1)' : 'scale(0.9)'
+                                fontWeight: 'bold'
                             }}
                         >
-                            <span style={{ color: 'white', fontSize: '1.2rem' }}>➤</span>
+                            ➤
                         </button>
                     </div>
 
